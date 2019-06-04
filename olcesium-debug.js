@@ -1854,8 +1854,19 @@ function () {
             });
             var geometryInstances = [];
 
-            for (var _i4 = 0, _positions2 = _positions; _i4 < _positions2.length; _i4++) {
-              var linePositions = _positions2[_i4];
+            for (var _iterator2 = _positions, _isArray2 = Array.isArray(_iterator2), _i4 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
+              var _ref2;
+
+              if (_isArray2) {
+                if (_i4 >= _iterator2.length) break;
+                _ref2 = _iterator2[_i4++];
+              } else {
+                _i4 = _iterator2.next();
+                if (_i4.done) break;
+                _ref2 = _i4.value;
+              }
+
+              var linePositions = _ref2;
               var polylineGeometry = new Cesium.GroundPolylineGeometry({
                 positions: linePositions,
                 width: width
@@ -1971,6 +1982,7 @@ function () {
         color = new Cesium.Color(1.0, 1.0, 1.0, opacity);
       }
 
+      var scale = imageStyle.getScale();
       var heightReference = this.getHeightReference(layer, feature, olGeometry);
       var bbOptions =
       /** @type {Cesium.optionsBillboardCollectionAdd} */
@@ -1978,7 +1990,7 @@ function () {
         // always update Cesium externs before adding a property
         image: image,
         color: color,
-        scale: imageStyle.getScale(),
+        scale: scale,
         heightReference: heightReference,
         position: position
       };
@@ -1987,7 +1999,7 @@ function () {
         var anchor = imageStyle.getAnchor();
 
         if (anchor) {
-          bbOptions.pixelOffset = new Cesium.Cartesian2(image.width / 2 - anchor[0], image.height / 2 - anchor[1]);
+          bbOptions.pixelOffset = new Cesium.Cartesian2((image.width / 2 - anchor[0]) * scale, (image.height / 2 - anchor[1]) * scale);
         }
       }
 
@@ -2614,7 +2626,7 @@ function () {
     var layerStyle = layer.getStyleFunction();
     var styles = this.computePlainStyle(layer, feature, layerStyle, resolution);
 
-    if (!styles.length) {
+    if (!styles || !styles.length) {
       // only 'render' features with a style
       return null;
     }
@@ -2672,6 +2684,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _RasterSynchronizer_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./RasterSynchronizer.js */ "./src/olcs/RasterSynchronizer.js");
 /* harmony import */ var _VectorSynchronizer_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./VectorSynchronizer.js */ "./src/olcs/VectorSynchronizer.js");
 /* harmony import */ var _OverlaySynchronizer_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./OverlaySynchronizer.js */ "./src/olcs/OverlaySynchronizer.js");
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 /**
  * @module olcs.OLCesium
  */
@@ -2778,11 +2794,8 @@ function () {
 
       targetElement.appendChild(this.container_);
     } else {
-      var oc = this.map_.getViewport().querySelector('.ol-overlaycontainer');
-
-      if (oc && oc.parentNode) {
-        oc.parentNode.insertBefore(this.container_, oc);
-      }
+      var seOverlayContainer = this.map_.getViewport().querySelector('.ol-overlaycontainer-stopevent');
+      seOverlayContainer.insertBefore(this.container_, seOverlayContainer.firstChild);
     }
     /**
      * Whether the Cesium container is placed over the ol map.
@@ -3217,7 +3230,6 @@ function () {
         }
 
         this.map_.getOverlayContainer().classList.add('olcs-hideoverlay');
-        this.map_.getOverlayContainerStopEvent().classList.add('olcs-hideoverlay');
       }
 
       this.camera_.readFromView();
@@ -3239,7 +3251,6 @@ function () {
         };
 
         this.map_.getOverlayContainer().classList.remove('olcs-hideoverlay');
-        this.map_.getOverlayContainerStopEvent().classList.remove('olcs-hideoverlay');
 
         if (this.hiddenRootGroup_) {
           this.hiddenRootGroup_.setVisible(true);
@@ -3379,21 +3390,22 @@ function () {
     if (!view.isDef() || isNaN(center[0]) || isNaN(center[1])) {
       throw new Error("The OpenLayers map is not properly initialized: " + center + " / " + view.getResolution());
     }
-  };
+  }
+  /**
+   * @type {ol.Feature}
+   */
+  ;
 
-  return OLCesium;
-}();
-
-Object.defineProperties(OLCesium.prototype, {
-  'trackedFeature': {
-    'get':
-    /** @this {olcs.OLCesium} */
-    function get() {
+  _createClass(OLCesium, [{
+    key: "trackedFeature",
+    get: function get() {
       return this.trackedFeature_;
-    },
-    'set':
-    /** @this {olcs.OLCesium} */
-    function set(feature) {
+    }
+    /**
+     * @param {ol.Feature} feature
+     */
+    ,
+    set: function set(feature) {
       if (this.trackedFeature_ !== feature) {
         var scene = this.scene_; //Stop tracking
 
@@ -3440,8 +3452,11 @@ Object.defineProperties(OLCesium.prototype, {
         this.trackedEntity_ = this.dataSourceDisplay_.defaultDataSource.entities.add(options);
       }
     }
-  }
-});
+  }]);
+
+  return OLCesium;
+}();
+
 /* harmony default export */ __webpack_exports__["default"] = (OLCesium);
 
 /***/ }),
@@ -3847,7 +3862,7 @@ function (_olcsAbstractSynchron) {
     while (queue.length > 0) {
       var olLayer = queue.splice(0, 1)[0];
       layers.push(olLayer);
-      zIndices[Object(_util_js__WEBPACK_IMPORTED_MODULE_1__["getUid"])(olLayer)] = olLayer.getZIndex();
+      zIndices[Object(_util_js__WEBPACK_IMPORTED_MODULE_1__["getUid"])(olLayer)] = olLayer.getZIndex() || 0;
 
       if (olLayer instanceof ol_layer_Group_js__WEBPACK_IMPORTED_MODULE_0___default.a) {
         var sublayers = olLayer.getLayers();
@@ -4507,18 +4522,18 @@ function (_olcsAbstractSynchron) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return LazyLoader; });
 /**
  * @module olcs.contrib.LazyLoader
  */
-var exports =
+var LazyLoader =
 /*#__PURE__*/
 function () {
   /**
    * @param {string} url
-   * @struct
    * @api
    */
-  function exports(url) {
+  function LazyLoader(url) {
     /**
      * @type {Promise<undefined>}
      * @protected
@@ -4537,7 +4552,7 @@ function () {
    */
 
 
-  var _proto = exports.prototype;
+  var _proto = LazyLoader.prototype;
 
   _proto.load = function load() {
     var _this = this;
@@ -4563,10 +4578,10 @@ function () {
     return this.promise;
   };
 
-  return exports;
+  return LazyLoader;
 }();
 
-/* harmony default export */ __webpack_exports__["default"] = (exports);
+
 
 /***/ }),
 
@@ -5072,8 +5087,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ol_layer_Image_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ol_layer_Image_js__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var ol_proj_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ol/proj.js */ "ol/proj.js");
 /* harmony import */ var ol_proj_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(ol_proj_js__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var ol_source_ImageStatic__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ol/source/ImageStatic */ "ol/source/ImageStatic");
-/* harmony import */ var ol_source_ImageStatic__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(ol_source_ImageStatic__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var ol_source_ImageStatic_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ol/source/ImageStatic.js */ "ol/source/ImageStatic.js");
+/* harmony import */ var ol_source_ImageStatic_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(ol_source_ImageStatic_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var ol_source_ImageWMS_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ol/source/ImageWMS.js */ "ol/source/ImageWMS.js");
 /* harmony import */ var ol_source_ImageWMS_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(ol_source_ImageWMS_js__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var ol_source_TileImage_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ol/source/TileImage.js */ "ol/source/TileImage.js");
@@ -5492,7 +5507,7 @@ exports.tileLayerToImageryLayer = function (olMap, olLayer, viewProj) {
     else {
         return null;
       }
-  } else if (source instanceof ol_source_ImageStatic__WEBPACK_IMPORTED_MODULE_4___default.a) {
+  } else if (source instanceof ol_source_ImageStatic_js__WEBPACK_IMPORTED_MODULE_4___default.a) {
     var _projection = _util_js__WEBPACK_IMPORTED_MODULE_10__["default"].getSourceProjection(source);
 
     if (!_projection) {
@@ -5788,11 +5803,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ol_proj_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ol/proj.js */ "ol/proj.js");
 /* harmony import */ var ol_proj_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(ol_proj_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util.js */ "./src/olcs/util.js");
+/* harmony import */ var ol_source_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ol/source.js */ "ol/source.js");
+/* harmony import */ var ol_source_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ol_source_js__WEBPACK_IMPORTED_MODULE_2__);
 /**
  * @module olcs.core.OLImageryProvider
  */
 
 
+
+
+var olUseNewCoordinates = function () {
+  var tileSource = new ol_source_js__WEBPACK_IMPORTED_MODULE_2__["Tile"]({
+    projection: 'EPSG:3857',
+    wrapX: true
+  });
+  var tileCoord = tileSource.getTileCoordForTileUrlFunction([6, -31, 22]);
+  return tileCoord && tileCoord[1] === 33 && tileCoord[2] === 22; // See b/test/spec/ol/source/tile.test.js
+  // of e9a30c5cb7e3721d9370025fbe5472c322847b35 in OpenLayers repository
+}();
 
 var OLImageryProvider
 /* should not extend Cesium.ImageryProvider */
@@ -5947,11 +5975,15 @@ function () {
     var tileUrlFunction = this.source_.getTileUrlFunction();
 
     if (tileUrlFunction && this.projection_) {
-      // Perform mapping of Cesium tile coordinates to OpenLayers tile coordinates:
-      // 1) Cesium zoom level 0 is OpenLayers zoom level 1 for EPSG:4326
-      var z_ = this.tilingScheme_ instanceof Cesium.GeographicTilingScheme ? level + 1 : level; // 2) OpenLayers tile coordinates increase from bottom to top
+      // Cesium zoom level 0 is OpenLayers zoom level 1 for EPSG:4326
+      var z_ = this.tilingScheme_ instanceof Cesium.GeographicTilingScheme ? level + 1 : level;
+      var y_ = y;
 
-      var y_ = -y - 1;
+      if (!olUseNewCoordinates) {
+        // OpenLayers version 3 to 5 tile coordinates increase from bottom to top
+        y_ = -y - 1;
+      }
+
       var url = tileUrlFunction.call(this.source_, [z_, x, y_], 1, this.projection_);
 
       if (this.proxy_) {
@@ -6519,6 +6551,17 @@ module.exports = ol.proj;
 
 /***/ }),
 
+/***/ "ol/source.js":
+/*!****************************!*\
+  !*** external "ol.source" ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ol.source;
+
+/***/ }),
+
 /***/ "ol/source/Cluster.js":
 /*!************************************!*\
   !*** external "ol.source.Cluster" ***!
@@ -6541,7 +6584,7 @@ module.exports = ol.source.Image;
 
 /***/ }),
 
-/***/ "ol/source/ImageStatic":
+/***/ "ol/source/ImageStatic.js":
 /*!****************************************!*\
   !*** external "ol.source.ImageStatic" ***!
   \****************************************/

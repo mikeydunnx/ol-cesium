@@ -64,11 +64,15 @@
 			<div class="tsd-panel tsd-typography">
 				<p>OpenLayers - Cesium integration library. Create your map using <a href="https://openlayers.org/">OpenLayers</a>, and visualize it on a globe with <a href="https://cesiumjs.org">Cesium</a>.
 				See <a href="https://openlayers.org/ol-cesium/examples/">live examples</a>.</p>
-				<h2 id="es6-modules">ES6 modules</h2>
+				<a href="#es6-modules" id="es6-modules" style="color: inherit; text-decoration: none;">
+					<h2>ES6 modules</h2>
+				</a>
 				<p>Since version 2.0, the code is entirely based on ES6 modules and syntax.
 					It requires OpenLayers 5.x.
 				A convenient ES6 package <code>olcs</code> is available on npm.</p>
-				<h2 id="features">Features</h2>
+				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+					<h2>Features</h2>
+				</a>
 				<p>Switch smoothly between 2D and 3D and synchronize:</p>
 				<ul>
 					<li>Map context (bounding box and zoom level);</li>
@@ -83,9 +87,13 @@
 					<li>Limiting Cesium resource consumption (idle detection)</li>
 				</ul>
 				<p>For synchronization of maps in projections other than EPSG:4326 and EPSG:3857, see <a href="https://github.com/openlayers/ol-cesium/pull/562">#562</a> branch.</p>
-				<h2 id="integration-in-your-application">Integration in your application</h2>
+				<a href="#integration-in-your-application" id="integration-in-your-application" style="color: inherit; text-decoration: none;">
+					<h2>Integration in your application</h2>
+				</a>
 				<p>There are several ways to use OL-Cesium in your application.</p>
-				<h3 id="as-an-es6-library-recommended-method-">As an ES6 library (recommended method)</h3>
+				<a href="#as-an-es6-library-recommended-method" id="as-an-es6-library-recommended-method" style="color: inherit; text-decoration: none;">
+					<h3>As an ES6 library (recommended method)</h3>
+				</a>
 				<pre><code class="language-bash">npm i --save olcs</code></pre>
 				<p>Then import the parts you need. Example:</p>
 				<pre><code class="language-js"><span class="hljs-keyword">import</span> OLCesium <span class="hljs-keyword">from</span> <span class="hljs-string">'olcs/OLCesium.js'</span>;
@@ -93,7 +101,9 @@
 ol3d.setEnabled(<span class="hljs-literal">true</span>);</code></pre>
 				<p>For Cesium integration see <a href="https://github.com/gberaudo/ol-cesium-webpack-example">ol-cesium-webpack-example</a>
 				based on the official <code>Cesium With Webpack</code> example.</p>
-				<h3 id="as-an-old-fashioned-independant-library">As an old-fashioned independant library</h3>
+				<a href="#as-an-old-fashioned-independant-library" id="as-an-old-fashioned-independant-library" style="color: inherit; text-decoration: none;">
+					<h3>As an old-fashioned independant library</h3>
+				</a>
 				<ul>
 					<li><p>build the library in dist/olcs.js:</p>
 						<pre><code class="language-bash">npm i --save olcs
@@ -109,26 +119,36 @@ ol3d.setEnabled(<span class="hljs-literal">true</span>);</code></pre>
 					</li>
 				</ul>
 				<p>In addition, see the <a href="https://openlayers.org/ol-cesium/examples/oldfashioned.html">old fashioned example</a>.</p>
-				<h3 id="as-an-umd-library-angular-">As an UMD library (Angular, ...)</h3>
+				<a href="#as-an-umd-library-angular-" id="as-an-umd-library-angular-" style="color: inherit; text-decoration: none;">
+					<h3>As an UMD library (Angular, ...)</h3>
+				</a>
 				<pre><code class="language-bash">npm i --save ol-cesium</code></pre>
 				<p>The UMD-specific build is located here: <code>node_modules/ol-cesium/dist/olcesium.umd.js</code>  </p>
 				<p>Then import the parts you need. Example:</p>
 				<pre><code class="language-js"><span class="hljs-keyword">import</span> OLCesium <span class="hljs-keyword">from</span> <span class="hljs-string">'olcs/OLCesium.js'</span>;
 <span class="hljs-keyword">const</span> ol3d = <span class="hljs-keyword">new</span> OLCesium({<span class="hljs-attr">map</span>: ol2dMap}); <span class="hljs-comment">// ol2dMap is the ol.Map instance</span>
 ol3d.setEnabled(<span class="hljs-literal">true</span>);</code></pre>
-				<h2 id="going-further">Going further</h2>
+				<a href="#going-further" id="going-further" style="color: inherit; text-decoration: none;">
+					<h2>Going further</h2>
+				</a>
 				<p>See the <a href="https://openlayers.org/ol-cesium/examples/">examples</a>.</p>
 				<p>If you are new to Cesium, you should also check the <a href="https://cesiumjs.org/tutorials">Cesium tutorials</a>.</p>
-				<h2 id="running-the-examples-in-debug-mode">Running the examples in debug mode</h2>
+				<a href="#running-the-examples-in-debug-mode" id="running-the-examples-in-debug-mode" style="color: inherit; text-decoration: none;">
+					<h2>Running the examples in debug mode</h2>
+				</a>
 				<p>This is useful for contributing to Ol-Cesium, because it loads the
 				source files instead of a minified build:</p>
 				<pre><code><span class="hljs-variable">$ </span>make serve</code></pre><p>will make the distribution examples available at <a href="http://localhost:3000/examples">http://localhost:3000/examples</a></p>
-				<h2 id="running-the-unminified-version-of-cesium">Running the unminified version of Cesium</h2>
+				<a href="#running-the-unminified-version-of-cesium" id="running-the-unminified-version-of-cesium" style="color: inherit; text-decoration: none;">
+					<h2>Running the unminified version of Cesium</h2>
+				</a>
 				<p>Passing the parameter <code>?mode=dev</code> to an example will load the debug version of
 					Cesium instead of the minified one. This is helpful when something breaks inside
 					Cesium. In distribution mode, an unminified version of OpenLayers and Ol-Cesium is
 				also loaded.</p>
-				<h2 id="limitations">Limitations</h2>
+				<a href="#limitations" id="limitations" style="color: inherit; text-decoration: none;">
+					<h2>Limitations</h2>
+				</a>
 				<ul>
 					<li><p>OpenLayers unmanaged layers are not discoverable and as a consequence not
 							supported. Plain layers should be used instead or the synchronization managed
@@ -137,7 +157,9 @@ ol3d.setEnabled(<span class="hljs-literal">true</span>);</code></pre>
 					<li><p>OpenLayers interactions are not supported in 3d. See <a href="https://github.com/openlayers/ol-cesium/issues/655">https://github.com/openlayers/ol-cesium/issues/655</a>.</p>
 					</li>
 				</ul>
-				<h2 id="release-process">Release process</h2>
+				<a href="#release-process" id="release-process" style="color: inherit; text-decoration: none;">
+					<h2>Release process</h2>
+				</a>
 				<p>See <a href="https://github.com/openlayers/ol-cesium/blob/master/RELEASE.md">RELEASE.md</a>.</p>
 			</div>
 		</div>
@@ -219,6 +241,7 @@ ol3d.setEnabled(<span class="hljs-literal">true</span>);</code></pre>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -267,7 +290,7 @@ ol3d.setEnabled(<span class="hljs-literal">true</span>);</code></pre>
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
