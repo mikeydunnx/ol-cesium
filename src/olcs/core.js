@@ -4,6 +4,7 @@
 import {linear as linearEasing} from 'ol/easing.js';
 import olLayerTile from 'ol/layer/Tile.js';
 import olLayerImage from 'ol/layer/Image.js';
+import olLayerVectorTile from 'ol/layer/VectorTile.js';
 import {get as getProjection, transformExtent} from 'ol/proj.js';
 import olSourceImageStatic from 'ol/source/ImageStatic.js';
 import olSourceImageWMS from 'ol/source/ImageWMS.js';
@@ -11,6 +12,7 @@ import olSourceTileImage from 'ol/source/TileImage.js';
 import olSourceTileWMS from 'ol/source/TileWMS.js';
 import {defaultImageLoadFunction} from 'ol/source/Image.js';
 import olcsCoreOLImageryProvider from './core/OLImageryProvider.js';
+import {MVTImageryProvider} from './core/MVTImageryProvider';
 import olcsUtil from './util.js';
 
 
@@ -387,13 +389,18 @@ exports.extentToRectangle = function(extent, projection) {
  * @api
  */
 exports.tileLayerToImageryLayer = function(olMap, olLayer, viewProj) {
+  let provider = null;
+  let source = olLayer.getSource();
+
+  if (olLayer instanceof olLayerVectorTile) {
+    provider = new MVTImageryProvider({});
+    const cesiumLayer = new Cesium.ImageryLayer(provider, {});
+    return cesiumLayer;
+  }
 
   if (!(olLayer instanceof olLayerTile) && !(olLayer instanceof olLayerImage)) {
     return null;
   }
-
-  let provider = null;
-  let source = olLayer.getSource();
 
   // Convert ImageWMS to TileWMS
   if (source instanceof olSourceImageWMS && source.getUrl() &&
